@@ -53,7 +53,10 @@ public interface ISubgraph<S extends Writable, V extends Writable, E extends Wri
   Iterable<IEdge<E, I, J>> getOutEdges();
 
   IEdge<E, I, J> getEdgeById(J edgeID);
-
+  Iterable<IVertex<V,E,I,J>> getBoundaryVertices();
+  Iterable<IEdge<E,I,J>> getBoundaryEdges();
+  Iterable<IEdge<E,I,J>> getLocalOutEdges();
+  Iterable<IEdge<E,I,J>> getRemoteOutEdges();
   void setSubgraphValue(S value);
 
   S getSubgraphValue();
