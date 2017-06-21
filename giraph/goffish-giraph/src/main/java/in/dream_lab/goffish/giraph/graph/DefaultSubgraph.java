@@ -40,6 +40,21 @@ public class DefaultSubgraph<SV extends Writable, V extends Writable, E extends 
   }
 
   @Override
+  public Iterable<IVertex<V, E, I, EI>> getBoundaryVertices() {
+    return null;
+  }
+
+  @Override
+  public Iterable<IEdge<E, I, EI>> getBoundaryEdges() {
+    return null;
+  }
+
+  @Override
+  public Iterable<IEdge<E, I, EI>> getLocalOutEdges() {
+    return null;
+  }
+
+  @Override
   public void setSubgraphValue(SV value) {
     getSubgraphVertices().setSubgraphValue(value);
   }
@@ -72,6 +87,26 @@ public class DefaultSubgraph<SV extends Writable, V extends Writable, E extends 
   @Override
   public long getLocalVertexCount() {
     return getSubgraphVertices().getNumVertices();
+  }
+
+  @Override
+  public long getRemoteVertexCount() {
+    return 0;
+  }
+
+  @Override
+  public long getLocalEdgeCount() {
+    return 0;
+  }
+
+  @Override
+  public long getBoundaryEdgeCount() {
+    return 0;
+  }
+
+  @Override
+  public long getBoundaryVertexCount() {
+    return 0;
   }
 
   @Override

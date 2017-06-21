@@ -80,7 +80,7 @@ public class GraphJob extends BSPJob {
     this.setEdgeIDClass(LongWritable.class);
     this.setSubgraphIDClass(LongWritable.class);
 
-    // this.setPartitioner(HashPartitioner.class);
+    // this.setPartitioner(HashPartiti0oner.class);
   }
 
   @Override

@@ -80,24 +80,40 @@ public class Subgraph<S extends Writable, V extends Writable, E extends Writable
 
   @Override
   public long getLocalEdgeCount() {
-    List<IEdge<E, I, J>> edgeList;
-    edgeList= (List<IEdge<E, I, J>>) getOutEdges();
-    return edgeList.size();
+    long localEdge=0;
+    for (IVertex<V, E, I, J> vertex : _localVertexMap.values()) {
+      for(IEdge<E, I, J> temp : vertex.getOutEdges()) {
+        localEdge++;
+      }
+    }
+    return localEdge;
   }
 
   @Override
   public long getBoundaryEdgeCount() {
-    List<IEdge<E,I,J>> boundaryEdge;
-    boundaryEdge= (List<IEdge<E, I, J>>) getBoundaryEdges();
-    return boundaryEdge.size();
-
+    long boundaryEdge=0;
+    for (IVertex<V, E, I, J> localVertex : _localVertexMap.values()) {
+      for(IEdge<E, I, J> temp : localVertex.getOutEdges()) {
+        if(!_localVertexMap.containsKey(temp.getSinkVertexId()))
+          boundaryEdge++;
+      }
+    }
+return boundaryEdge;
   }
 
   @Override
   public long getBoundaryVertexCount() {
-    HashSet <IVertex<V, E, I, J>> boundaryVertices;
-    boundaryVertices= (HashSet<IVertex<V, E, I, J>>) getBoundaryVertices();
-    return boundaryVertices.size();
+    long boundaryVertices=0;
+    for (IVertex<V, E, I, J> localVertex : _localVertexMap.values()) {
+      for(IEdge<E, I, J> temp : localVertex.getOutEdges()) {
+        if(!_localVertexMap.containsKey(temp.getSinkVertexId())) {
+          boundaryVertices++;
+          break;
+        }
+      }
+    }
+
+    return boundaryVertices;
   }
 
   @Override
@@ -172,10 +188,10 @@ public class Subgraph<S extends Writable, V extends Writable, E extends Writable
 
   @Override
   public Iterable<IVertex<V,E,I,J>> getBoundaryVertices() {
-   HashSet <IVertex<V, E, I, J>> boundaryVertices = new HashSet<>();
+   List <IVertex<V, E, I, J>> boundaryVertices = new ArrayList<>();
     for (IVertex<V, E, I, J> localVertex : _localVertexMap.values()) {
       for(IEdge<E, I, J> temp : localVertex.getOutEdges()) {
-        if(!_localVertexMap.values().contains(temp.getSinkVertexId().getClass())) {
+        if(!_localVertexMap.containsKey(temp.getSinkVertexId())) {
           boundaryVertices.add(localVertex);
           break;
         }
@@ -189,7 +205,7 @@ public class Subgraph<S extends Writable, V extends Writable, E extends Writable
     List<IEdge<E,I,J>> boundaryEdge = new ArrayList<>();
     for (IVertex<V, E, I, J> localVertex : _localVertexMap.values()) {
       for(IEdge<E, I, J> temp : localVertex.getOutEdges()) {
-        if(!_localVertexMap.values().contains(temp.getSinkVertexId().getClass()))
+        if(!_localVertexMap.containsKey(temp.getSinkVertexId()))
           boundaryEdge.add(temp);
       }
     }
@@ -207,16 +223,6 @@ public class Subgraph<S extends Writable, V extends Writable, E extends Writable
     return localEdge;
   }
 
-  @Override
-  public Iterable<IEdge<E, I, J>> getRemoteOutEdges() {
-    List<IEdge<E,I,J>> remoteEdges = new ArrayList<>();
-    for (IVertex<V, E, I, J> vertex : _remoteVertexMap.values()) {
-      for(IEdge<E, I, J> temp : vertex.getOutEdges()) {
-        remoteEdges.add(temp);
-      }
-    }
-    return remoteEdges;
-  }
 
   @Override
   public Iterable<IEdge<E, I, J>> getOutEdges() {
