@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
-*/
+ */
 
 package in.dream_lab.goffish.api;
 
@@ -31,9 +31,9 @@ public interface BiVertex<V extends Writable, E extends Writable, I extends Writ
 
   boolean isRemote();
 
-  Collection<IEdge<E, I, J>> getOutEdges();
+  Collection<IEdge<E, J, I>> getOutEdges();
 
-  Collection<IEdge<E, I, J>> getInEdges();// * addition to IVertex
+  Collection<IEdge<E, J, I>> getInEdges();// * addition to IVertex
 
   V getValue();
 
