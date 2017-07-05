@@ -1,31 +1,17 @@
-/**
- *  Copyright 2017 DREAM:Lab, Indian Institute of Science, Bangalore
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License. You may obtain
- *  a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *  
- *  @author Himanshu Sharma
- *  @author Diptanshu Kakwani
-*/
 
-package in.dream_lab.goffish.hama;
+        package in.dream_lab.goffish.hama;
+        import org.apache.hadoop.io.Writable;
 
-import org.apache.hadoop.io.Writable;
 
-import in.dream_lab.goffish.api.IEdge;
+        import org.apache.hadoop.io.LongWritable;
+        import org.apache.hadoop.io.Writable;
+
+        import in.dream_lab.goffish.api.IEdge;
 
 public class Edge<E extends Writable, I extends Writable, J extends Writable>
-    implements IEdge<E, I, J> {
+        implements IEdge<E, I, J> {
 
+  private Writable _source;
   private E _value;
   private J edgeID;
   private I _sink;
@@ -33,6 +19,11 @@ public class Edge<E extends Writable, I extends Writable, J extends Writable>
   public Edge(J id, I sinkID) {
     edgeID = id;
     _sink = sinkID;
+  }
+
+  public Edge(Writable sourceID, J id, I sinkID) {
+    this(id,sinkID);
+    _source = sourceID;
   }
 
   void setSinkID(I sinkID) {
@@ -50,6 +41,11 @@ public class Edge<E extends Writable, I extends Writable, J extends Writable>
   }
 
   @Override
+  public Writable getSourceVertexId() {
+    return _source;
+  }
+
+  @Override
   public J getEdgeId() {
     return edgeID;
   }
@@ -59,3 +55,5 @@ public class Edge<E extends Writable, I extends Writable, J extends Writable>
     return _sink;
   }
 }
+
+

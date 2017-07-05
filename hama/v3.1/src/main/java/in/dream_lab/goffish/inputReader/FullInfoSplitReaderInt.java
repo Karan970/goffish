@@ -18,33 +18,37 @@
 */
 
 
-package in.dream_lab.goffish.hama;
+package in.dream_lab.goffish.inputReader;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import in.dream_lab.goffish.api.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.io.BytesWritable;
+import in.dream_lab.goffish.hama.*;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.Writable;
-import org.apache.hama.HamaConfiguration;
-import org.apache.hama.bsp.BSPPeer;
-import org.apache.hama.bsp.sync.SyncException;
-import org.apache.hama.commons.util.KeyValuePair;
+import java.io.IOException;
+import java.util.ArrayList;
+        import java.util.HashMap;
+        import java.util.List;
+        import java.util.Map;
 
-import com.google.common.primitives.Longs;
+        import in.dream_lab.goffish.api.*;
+        import org.apache.commons.logging.Log;
+        import org.apache.commons.logging.LogFactory;
+        import org.apache.hadoop.io.BytesWritable;
+        import org.apache.hadoop.io.IntWritable;
+        import org.apache.hadoop.io.LongWritable;
+        import org.apache.hadoop.io.Writable;
+        import org.apache.hama.HamaConfiguration;
+        import org.apache.hama.bsp.BSPPeer;
+        import org.apache.hama.bsp.sync.SyncException;
+        import org.apache.hama.commons.util.KeyValuePair;
 
-import in.dream_lab.goffish.hama.api.IControlMessage;
-import in.dream_lab.goffish.hama.api.IReader;
-import org.apache.hama.util.ReflectionUtils;
+        import com.google.common.primitives.Longs;
+
+        import in.dream_lab.goffish.hama.api.IControlMessage;
+        import in.dream_lab.goffish.hama.api.IReader;
+        import org.apache.hama.util.ReflectionUtils;
 
 /**
- * 
+ *
  * @author humus
  *
  * @param <S>
@@ -55,19 +59,19 @@ import org.apache.hama.util.ReflectionUtils;
  *
  * Expected format :
  * pid sgid     vid sinkid1 sgid1 pid1 sinkid2 sgid2 pid2 ...
- * 
+ *
  * VertexId - LongWritable
  * EdgeId - IntWritable
  * SubgraphId - LongWritable
- * 
+ *
  * As this reader takes split files it might also get those vertices that belong to other partitions
  * superstep 1 - shuffles the vertices around and send them to their respective partition(creates a few obj also)
  * superstep 2 - create objects(vertex,edge and remote vertex). send the subgraphIDs that we have to all other partitions.
- * Superstep 3 - generate subgraphPartitionMapping from the incoming msgs. 
+ * Superstep 3 - generate subgraphPartitionMapping from the incoming msgs.
  */
 public class FullInfoSplitReaderInt<S extends Writable, V extends Writable, E extends Writable, K extends Writable, M extends Writable>
-    implements
-    IReader<Writable, Writable, Writable, Writable, S, V, E, LongWritable, IntWritable, LongWritable> {
+        implements
+        IReader<Writable, Writable, Writable, Writable, S, V, E, LongWritable, IntWritable, LongWritable> {
 
   public static final Log LOG = LogFactory.getLog(FullInfoSplitReaderInt.class);
 
@@ -78,8 +82,8 @@ public class FullInfoSplitReaderInt<S extends Writable, V extends Writable, E ex
   private int edgeCount = 0;
 
   public FullInfoSplitReaderInt(
-      BSPPeer<Writable, Writable, Writable, Writable, Message<K, M>> peer,
-      Map<K, Integer> subgraphPartitionMap) {
+          BSPPeer<Writable, Writable, Writable, Writable, Message<K, M>> peer,
+          Map<K, Integer> subgraphPartitionMap) {
     this.peer = peer;
     this.subgraphPartitionMap = subgraphPartitionMap;
     this.conf = peer.getConfiguration();
@@ -88,16 +92,16 @@ public class FullInfoSplitReaderInt<S extends Writable, V extends Writable, E ex
 
   @Override
   public List<ISubgraph<S, V, E, LongWritable, IntWritable, LongWritable>> getSubgraphs()
-      throws IOException, SyncException, InterruptedException {
+          throws IOException, SyncException, InterruptedException {
 
     KeyValuePair<Writable, Writable> pair;
     while ((pair = peer.readNext()) != null) {
       String stringInput = pair.getValue().toString();
       // pid is the first column and its range is 0 to max pid
       int partitionID = Integer
-          .parseInt(stringInput.substring(0, stringInput.indexOf('\t')));
+              .parseInt(stringInput.substring(0, stringInput.indexOf('\t')));
       LOG.debug("partitionID = "+partitionID);
-      
+
       if (partitionID != peer.getPeerIndex()) {
         // send vertex to its correct partition
         Message<K, M> msg = new Message<>();
@@ -122,7 +126,7 @@ public class FullInfoSplitReaderInt<S extends Writable, V extends Writable, E ex
     while ((msg = peer.getCurrentMessage()) != null) {
       ControlMessage receivedCtrl = (ControlMessage) msg.getControlInfo();
       createVertex(new String(
-          receivedCtrl.getExtraInfo().iterator().next().copyBytes()));
+              receivedCtrl.getExtraInfo().iterator().next().copyBytes()));
     }
 
     // broadcast all subgraphs belonging to this partition
@@ -133,10 +137,10 @@ public class FullInfoSplitReaderInt<S extends Writable, V extends Writable, E ex
     controlInfo.setPartitionID(peer.getPeerIndex());
     subgraphMapppingMessage.setControlInfo(controlInfo);
     for (ISubgraph<S, V, E, LongWritable, IntWritable, LongWritable> subgraph : partition
-        .getSubgraphs()) {
+            .getSubgraphs()) {
 
       byte subgraphIDbytes[] = Longs
-          .toByteArray(subgraph.getSubgraphId().get());
+              .toByteArray(subgraph.getSubgraphId().get());
       controlInfo.addextraInfo(subgraphIDbytes);
     }
 
@@ -149,7 +153,7 @@ public class FullInfoSplitReaderInt<S extends Writable, V extends Writable, E ex
       Integer partitionID = receivedCtrl.getPartitionID();
       for (BytesWritable rawSubgraphID : receivedCtrl.getExtraInfo()) {
         LongWritable subgraphID = new LongWritable(
-            Longs.fromByteArray(rawSubgraphID.copyBytes()));
+                Longs.fromByteArray(rawSubgraphID.copyBytes()));
         subgraphPartitionMap.put((K) subgraphID, partitionID);
       }
     }
@@ -169,20 +173,20 @@ public class FullInfoSplitReaderInt<S extends Writable, V extends Writable, E ex
     String vertexValue[] = stringInput.split("\\s+");
 
     LongWritable vertexID = new LongWritable(
-        Long.parseLong(vertexValue[1]));
+            Long.parseLong(vertexValue[1]));
     int partitionID = Integer.parseInt(vertexValue[0]) - 1;
     LongWritable vertexSubgraphID = new LongWritable(
-        Long.parseLong(vertexValue[2]));
+            Long.parseLong(vertexValue[2]));
 
     Subgraph<S, V, E, LongWritable, IntWritable, LongWritable> subgraph = (Subgraph<S, V, E, LongWritable, IntWritable, LongWritable>) partition
-        .getSubgraph(vertexSubgraphID);
+            .getSubgraph(vertexSubgraphID);
 
     if (subgraph == null) {
       subgraph = new Subgraph<S, V, E, LongWritable, IntWritable, LongWritable>(
-          partitionID, vertexSubgraphID);
+              partitionID, vertexSubgraphID);
       partition.addSubgraph(subgraph);
     }
-    List<IEdge<E, LongWritable, IntWritable, Writable>> _adjList = new ArrayList<IEdge<E, LongWritable, IntWritable, Writable>>();
+    List<IEdge<E, LongWritable, IntWritable>> _adjList = new ArrayList<IEdge<E, LongWritable, IntWritable>>();
 
     for (int j = 3; j < vertexValue.length; j++) {
       if (j + 3 > vertexValue.length) {
@@ -190,17 +194,18 @@ public class FullInfoSplitReaderInt<S extends Writable, V extends Writable, E ex
       }
       LongWritable sinkID = new LongWritable(Long.parseLong(vertexValue[j]));
       LongWritable sinkSubgraphID = new LongWritable(
-          Long.parseLong(vertexValue[j + 1]));
+              Long.parseLong(vertexValue[j + 1]));
       int sinkPartitionID = Integer.parseInt(vertexValue[j + 2]);
       j += 2;
       IntWritable edgeID = new IntWritable(
-          edgeCount++ | (( peer.getPeerIndex()) << 27));
-      Edge<E, LongWritable, IntWritable,Writable> e = new Edge<E, LongWritable, IntWritable,Writable>(vertexID,edgeID, sinkID);
+              edgeCount++ | (( peer.getPeerIndex()) << 27));
+      Edge<E, LongWritable, IntWritable> e = new Edge<E, LongWritable, IntWritable>(
+              edgeID, sinkID);
       _adjList.add(e);
       if (sinkPartitionID != peer.getPeerIndex() && subgraph.getVertexById(sinkID) == null) {
         // this is a remote vertex
         IRemoteVertex<V, E, LongWritable, IntWritable, LongWritable> sink = new RemoteVertex<>(
-            sinkID, sinkSubgraphID);
+                sinkID, sinkSubgraphID);
         // Add it to the same subgraph, as this is part of weakly connected
         // component
         subgraph.addVertex(sink);
@@ -209,7 +214,7 @@ public class FullInfoSplitReaderInt<S extends Writable, V extends Writable, E ex
     subgraph.addVertex(createVertexInstance(vertexID, _adjList));
   }
 
-  private IVertex<V, E, LongWritable, IntWritable> createVertexInstance(LongWritable vertexID, List<IEdge<E, LongWritable, IntWritable, Writable>> adjList) {
+  private IVertex<V, E, LongWritable, IntWritable> createVertexInstance(LongWritable vertexID, List<IEdge<E, LongWritable, IntWritable>> adjList) {
     return ReflectionUtils.newInstance(GraphJobRunner.VERTEX_CLASS, new Class<?>[] {Writable.class, Iterable.class},
             new Object[] {vertexID, adjList});
   }

@@ -17,7 +17,7 @@
  *  @author Diptanshu Kakwani
 */
 
-package in.dream_lab.goffish.hama;
+package in.dream_lab.goffish.inputReader;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hama.bsp.BSPJob;

@@ -96,7 +96,7 @@ public class LongTextAdjacencyListReader<S extends Writable, V extends Writable,
         LongWritable sinkID = new LongWritable(Long.parseLong(vertexValue[j]));
         LongWritable edgeID = new LongWritable(
             edgeCount++ | (((long) peer.getPeerIndex()) << 32));
-        Edge<E, LongWritable, LongWritable> e = new Edge<E, LongWritable, LongWritable>(
+        Edge<E, LongWritable, LongWritable> e = new Edge<E, LongWritable, LongWritable>(vertexID,
             edgeID, sinkID);
         _adjList.add(e);
       }

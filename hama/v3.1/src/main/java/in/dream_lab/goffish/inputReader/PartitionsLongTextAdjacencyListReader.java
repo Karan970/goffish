@@ -75,7 +75,7 @@ public class PartitionsLongTextAdjacencyListReader<S extends Writable, V extends
     
     Map<Integer, List<String>> partitionMap = new HashMap<Integer, List<String>>();
     vertexMap = new HashMap<LongWritable, IVertex<V, E, LongWritable, LongWritable>>();
-    List<IEdge<E, LongWritable, LongWritable>> _edges = new ArrayList<IEdge<E, LongWritable, LongWritable>>();
+    List<IEdge<E, LongWritable, LongWritable>> _edges = new ArrayList<>();
 
     long edgeCount = 0;
     LOG.debug("SETUP Starting " + peer.getPeerIndex() + " Memory: " + Runtime.getRuntime().freeMemory());
@@ -104,8 +104,7 @@ public class PartitionsLongTextAdjacencyListReader<S extends Writable, V extends
           LongWritable sinkID = new LongWritable(Long.parseLong(vertexValue[j]));
           LongWritable edgeID = new LongWritable(
               edgeCount++ | (((long) peer.getPeerIndex()) << 32));
-          IEdge<E, LongWritable, LongWritable> e = new Edge<E, LongWritable, LongWritable>(
-              edgeID, sinkID);
+          IEdge<E, LongWritable, LongWritable> e = new Edge<E, LongWritable, LongWritable>(vertexID ,edgeID, sinkID);
           _adjList.add(e);
           _edges.add(e);
         }
@@ -148,8 +147,7 @@ public class PartitionsLongTextAdjacencyListReader<S extends Writable, V extends
         LongWritable sinkID = new LongWritable(Long.parseLong(vertexInfo[j]));
         LongWritable edgeID = new LongWritable(
             edgeCount++ | (((long) peer.getPeerIndex()) << 32));
-        Edge<E, LongWritable, LongWritable> e = new Edge<E, LongWritable, LongWritable>(
-            edgeID, sinkID);
+        Edge<E, LongWritable, LongWritable> e = new Edge<E, LongWritable, LongWritable>(vertexID,edgeID, sinkID);
         _adjList.add(e);
         _edges.add(e);
       }
@@ -168,6 +166,7 @@ public class PartitionsLongTextAdjacencyListReader<S extends Writable, V extends
         sink = new RemoteVertex<V, E, LongWritable, LongWritable, LongWritable>(sinkID);
         vertexMap.put(sinkID, sink);
       }
+
     }
 
     Partition<S, V, E, LongWritable, LongWritable, LongWritable> partition = new Partition<S, V, E, LongWritable, LongWritable, LongWritable>(peer.getPeerIndex());

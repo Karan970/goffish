@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
-*/
+ */
 
 package in.dream_lab.goffish.api;
 
@@ -32,4 +32,7 @@ public interface IEdge<E extends Writable, I extends Writable, J extends Writabl
   E getValue();
 
   void setValue(E value);
+
+  Writable getSourceVertexId();
+
 }

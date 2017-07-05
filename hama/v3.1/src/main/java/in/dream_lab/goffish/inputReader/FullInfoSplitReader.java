@@ -194,7 +194,7 @@ public class FullInfoSplitReader<S extends Writable, V extends Writable, E exten
       j += 2;
       LongWritable edgeID = new LongWritable(
           edgeCount++ | (((long) peer.getPeerIndex()) << 32));
-      Edge<E, LongWritable, LongWritable> e = new Edge<E, LongWritable, LongWritable>(
+      Edge<E, LongWritable, LongWritable> e = new Edge<E, LongWritable, LongWritable>(vertexID,
           edgeID, sinkID);
       _adjList.add(e);
       if (sinkPartitionID != peer.getPeerIndex() && subgraph.getVertexById(sinkID) == null) {

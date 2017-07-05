@@ -16,7 +16,9 @@
 
 package in.dream_lab.goffish.api;
 
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Writable;
+import sun.security.provider.certpath.Vertex;
 
 /*TODO: Add IWCSubgraph and ISCSubgraph
  * @param <S> Subgraph value object type
@@ -46,16 +48,22 @@ public interface ISubgraph<S extends Writable, V extends Writable, E extends Wri
 
   Iterable<IVertex<V, E, I, J>> getVertices();
 
+  Iterable<K> getRemoteSubgraphsID();
+
   Iterable<IVertex<V, E, I, J>> getLocalVertices();
 
   Iterable<IRemoteVertex<V, E, I, J, K>> getRemoteVertices();
 
   Iterable<IEdge<E, I, J>> getOutEdges();
+  Iterable<IEdge<E, I, J>> getInEdges();
+
 
   IEdge<E, I, J> getEdgeById(J edgeID);
   Iterable<IVertex<V,E,I,J>> getBoundaryVertices();
   Iterable<IEdge<E,I,J>> getBoundaryEdges();
   Iterable<IEdge<E,I,J>> getLocalOutEdges();
+  Iterable<IEdge<E,I,J>> getBoundaryInEdges();
+
 
   void setSubgraphValue(S value);
 

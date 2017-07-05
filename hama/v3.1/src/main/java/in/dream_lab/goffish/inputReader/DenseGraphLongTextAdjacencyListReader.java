@@ -128,13 +128,13 @@ public class DenseGraphLongTextAdjacencyListReader<S extends Writable, V extends
       String vertexValue[] = stringInput.split("\\s+");
       
       LongWritable vertexID = new LongWritable(Long.parseLong(vertexValue[0]));
-      List<IEdge<E, LongWritable, LongWritable>> _adjList = new ArrayList<IEdge<E, LongWritable, LongWritable>>();
+      List<IEdge<E, LongWritable, LongWritable>> _adjList = new ArrayList<>();
 
       for (int j = 1; j < vertexValue.length; j++) {
         LongWritable sinkID = new LongWritable(Long.parseLong(vertexValue[j]));
         LongWritable edgeID = new LongWritable(
                 edgeCount++ | (((long) peer.getPeerIndex()) << 32));
-        Edge<E, LongWritable, LongWritable> e = new Edge<E, LongWritable, LongWritable>(edgeID, sinkID);
+        Edge<E,LongWritable, LongWritable> e = new Edge<E,LongWritable, LongWritable>(vertexID, edgeID, sinkID);
         _adjList.add(e);
       }
       vertexMap.put(vertexID.get(), createVertexInstance(vertexID, _adjList));

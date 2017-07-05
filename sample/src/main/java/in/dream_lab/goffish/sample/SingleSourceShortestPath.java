@@ -16,16 +16,11 @@
 
 package in.dream_lab.goffish.sample;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,8 +30,6 @@ import java.util.Set;
 
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
-
-import com.google.common.collect.Iterables;
 
 import in.dream_lab.goffish.api.IEdge;
 import in.dream_lab.goffish.api.IMessage;

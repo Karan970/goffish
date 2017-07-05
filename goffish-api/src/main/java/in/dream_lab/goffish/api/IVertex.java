@@ -12,11 +12,13 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
-*/
+ */
 
 package in.dream_lab.goffish.api;
 
 import org.apache.hadoop.io.Writable;
+
+import java.util.ArrayList;
 
 /* Defines Vertex interface. Could be used to define multiple graph representation,
  * e.g: adjacency list, adjacency set.
@@ -41,5 +43,10 @@ public interface IVertex<V extends Writable, E extends Writable, I extends Writa
   void setValue(V value);
 
   IEdge<E, I, J> getOutEdge(I vertexId);
+
+  Iterable<IEdge<E, I, J>> getInEdges();// * addition to IVertex
+
+
+
 
 }

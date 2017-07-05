@@ -21,7 +21,7 @@ package in.dream_lab.goffish.hama;
 
 import java.util.*;
 
-import com.google.common.collect.Iterables;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Writable;
 
 import in.dream_lab.goffish.api.IEdge;
@@ -154,6 +154,11 @@ return boundaryEdge;
   }
 
   @Override
+  public Iterable<K> getRemoteSubgraphsID() {
+    return null;
+  }
+
+  @Override
   public Iterable<IVertex<V, E, I, J>> getLocalVertices() {
     return _localVertexMap.values();
   }
@@ -223,6 +228,18 @@ return boundaryEdge;
     return localEdge;
   }
 
+  @Override
+  public Iterable<IEdge<E, I, J>> getBoundaryInEdges() {
+    List<IEdge<E,I,J>> boundaryInEdge = new ArrayList<>();
+    for (IVertex<V, E, I, J> localVertex : _localVertexMap.values()) {
+      for(IEdge<E, I, J> temp : localVertex.getInEdges()) {
+        if(!_localVertexMap.containsKey(temp.getSourceVertexId()))
+          boundaryInEdge.add(temp);
+      }
+    }
+    return boundaryInEdge;
+  }
+
 
   @Override
   public Iterable<IEdge<E, I, J>> getOutEdges() {
@@ -233,5 +250,16 @@ return boundaryEdge;
       }
     }
     return edgeList;
+  }
+
+  @Override
+  public Iterable<IEdge<E, I, J>> getInEdges() {
+    List<IEdge<E, I, J>> _inedgeList = new ArrayList<IEdge<E, I, J>>();
+    for (IVertex<V, E, I, J> vertex : _localVertexMap.values()) {
+      for (IEdge<E, I, J> vertexEdge : vertex.getInEdges()) {
+        _inedgeList.add(vertexEdge);
+      }
+    }
+    return _inedgeList;
   }
 }

@@ -12,10 +12,10 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- *  
+ *
  *  @author Himanshu Sharma
  *  @author Diptanshu Kakwani
-*/
+ */
 
 package in.dream_lab.goffish.hama;
 
@@ -25,8 +25,8 @@ import org.apache.hadoop.io.Writable;
 
 import java.util.*;
 
-public class VertexWithAdjacentSet<V extends Writable, E extends Writable, I extends Writable, J extends Writable>
-    implements IVertex<V, E, I, J> {
+public abstract class VertexWithAdjacentSet<V extends Writable, E extends Writable, I extends Writable, J extends Writable>
+        implements IVertex<V, E, I, J> {
 
   private Map<I, IEdge<E, I, J>> _adjSet;
   private I vertexID;

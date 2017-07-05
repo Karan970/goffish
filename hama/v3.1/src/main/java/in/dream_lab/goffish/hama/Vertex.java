@@ -12,10 +12,10 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- *  
+ *
  *  @author Himanshu Sharma
  *  @author Diptanshu Kakwani
-*/
+ */
 
 package in.dream_lab.goffish.hama;
 
@@ -30,22 +30,24 @@ import in.dream_lab.goffish.api.IEdge;
 import in.dream_lab.goffish.api.IVertex;
 
 public class Vertex<V extends Writable, E extends Writable, I extends Writable, J extends Writable>
-    implements IVertex<V, E, I, J> {
+        implements IVertex<V, E, I, J> {
 
-  private List<IEdge<E, I, J>> _adjList;
+  public List<IEdge<E, I, J>> _adjList;
+  private List<IEdge<E, I, J>> _inadjList;
   private I vertexID;
   private V _value;
 
   Vertex() {
     _adjList = new ArrayList<IEdge<E, I, J>>();
+      _inadjList = new ArrayList<>();
   }
 
-  Vertex(I ID) {
+  public Vertex(I ID) {
     this();
     vertexID = ID;
   }
 
-  Vertex(I Id, Iterable<IEdge<E, I, J>> edges) {
+  public Vertex(I Id, Iterable<IEdge<E, I, J>> edges) {
     this(Id);
     for (IEdge<E, I, J> e : edges)
       _adjList.add(e);
@@ -88,7 +90,20 @@ public class Vertex<V extends Writable, E extends Writable, I extends Writable, 
     return null;
   }
 
+  @Override
+  public Iterable<IEdge<E, I, J>> getInEdges() {
+    return _inadjList;
+  }
 
+
+  public void addInEdge(IEdge<E, I, J> e) {
+    _inadjList.add(e);
+  }
+
+  public void addInEdges(ArrayList<IEdge<E, I, J>> iEdges) {
+    for(IEdge<E, I, J> e: iEdges)
+      _inadjList.add(e);
+  }
 
   @SuppressWarnings("rawtypes")
   @Override

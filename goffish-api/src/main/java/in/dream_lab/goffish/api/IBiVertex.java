@@ -25,17 +25,17 @@ import org.apache.hadoop.io.Writable;
  * @param <V> Vertex value object type
  * @param <E> Edge value object type
  * */
-public interface BiVertex<V extends Writable, E extends Writable, I extends Writable, J extends Writable> {
+public interface IBiVertex<V extends Writable, E extends Writable, I extends Writable, J extends Writable> {
 
   I getVertexId();
 
   boolean isRemote();
 
-  Collection<IEdge<E, J, I>> getOutEdges();
+  Collection<IEdge> getOutEdges();
 
-  Collection<IEdge<E, J, I>> getInEdges();// * addition to IVertex
+  Collection<IEdge> getInEdges();// * addition to IVertex
 
-  V getValue();
+  J getValue();
 
   void setValue(V value);
 }

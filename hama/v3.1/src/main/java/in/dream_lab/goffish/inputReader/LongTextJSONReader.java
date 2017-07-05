@@ -25,13 +25,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
 import in.dream_lab.goffish.hama.*;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -39,7 +36,6 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hama.HamaConfiguration;
 import org.apache.hama.bsp.BSPPeer;
-import org.apache.hama.bsp.BSPPeerImpl;
 import org.apache.hama.bsp.sync.SyncException;
 import org.apache.hama.commons.util.KeyValuePair;
 import org.apache.hama.util.ReflectionUtils;
@@ -51,7 +47,6 @@ import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
 
 import in.dream_lab.goffish.api.IEdge;
-import in.dream_lab.goffish.api.IMessage;
 import in.dream_lab.goffish.api.ISubgraph;
 import in.dream_lab.goffish.api.IVertex;
 import in.dream_lab.goffish.hama.api.IControlMessage;
@@ -306,7 +301,7 @@ public class LongTextJSONReader<S extends Writable, V extends Writable, E extend
       //fix this
       E edgeValue = (E) new Text(edgeValues[2].toString());
       
-      Edge<E, LongWritable, LongWritable> edge = new Edge<E, LongWritable, LongWritable>(
+      Edge<E, LongWritable, LongWritable> edge = new Edge<E, LongWritable, LongWritable>(null,
           edgeID, sinkID);
       edge.setValue(edgeValue);
       _adjList.add(edge);

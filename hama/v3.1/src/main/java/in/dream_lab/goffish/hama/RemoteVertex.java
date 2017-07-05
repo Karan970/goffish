@@ -12,13 +12,14 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- *  
+ *
  *  @author Himanshu Sharma
  *  @author Diptanshu Kakwani
-*/
+ */
 
 package in.dream_lab.goffish.hama;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.lang.NotImplementedException;
@@ -29,7 +30,7 @@ import in.dream_lab.goffish.api.IRemoteVertex;
 import in.dream_lab.goffish.api.IVertex;
 
 public class RemoteVertex<V extends Writable, E extends Writable, I extends Writable, J extends Writable, K extends Writable>
-    implements IRemoteVertex<V, E, I, J, K> {
+        implements IRemoteVertex<V, E, I, J, K> {
 
   I vertexID;
   K subgraphID;
@@ -76,6 +77,21 @@ public class RemoteVertex<V extends Writable, E extends Writable, I extends Writ
   @Override
   public IEdge<E, I, J> getOutEdge(I i) {
     throw new NotImplementedException("Remote Vertex does not have edges");
+  }
+
+  @Override
+  public Iterable<IEdge<E, I, J>> getInEdges() {
+    throw new NotImplementedException("Remote Vertex does not have inedges");
+  }
+
+
+  public void addInEdge(IEdge<E, I, J> e) {
+    throw new NotImplementedException("Remote Vertex does not have inedges");
+  }
+
+
+  public void addInEdges(ArrayList<IEdge<E, I, J>> iEdges) {
+    throw new NotImplementedException("Remote Vertex does not have inedges");
   }
 
   @Override
